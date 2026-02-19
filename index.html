@@ -35,10 +35,72 @@
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(20px);
             z-index: 10;
+            position: relative;
         }
 
         header h1 { font-size: 17px; font-weight: 600; margin: 0; letter-spacing: -0.5px; }
         header p { font-size: 12px; color: #34c759; margin: 4px 0 0; font-weight: 500; }
+
+        /* Иконка Инфо */
+        .info-btn {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: 1.5px solid #d2d2d7;
+            color: var(--text-secondary);
+            font-size: 18px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .info-btn:active { background: #f5f5f7; transform: translateY(-50%) scale(0.9); }
+
+        /* Поп-ап (Модальное окно) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        .modal {
+            background: white;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: modalFade 0.3s ease-out;
+        }
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal h3 { margin: 0 0 10px; font-size: 18px; }
+        .modal p { color: var(--text-secondary); font-size: 15px; margin-bottom: 20px; }
+        .modal a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        .close-modal {
+            background: var(--user-msg);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
 
         #chat-container {
             flex: 1;
@@ -57,7 +119,7 @@
             font-size: 16px;
             line-height: 1.4;
             animation: messageAppear 0.4s cubic-bezier(0.2, 0.6, 0.3, 1.1);
-            word-wrap: break-word;
+            white-space: pre-wrap;
         }
 
         @keyframes messageAppear {
@@ -65,19 +127,8 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .bot {
-            align-self: flex-start;
-            background-color: var(--bot-msg);
-            color: var(--text-main);
-            border-bottom-left-radius: 5px;
-        }
-
-        .user {
-            align-self: flex-end;
-            background-color: var(--user-msg);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
+        .bot { align-self: flex-start; background-color: var(--bot-msg); color: var(--text-main); border-bottom-left-radius: 5px; }
+        .user { align-self: flex-end; background-color: var(--user-msg); color: white; border-bottom-right-radius: 5px; }
 
         .options-container {
             display: flex;
@@ -97,14 +148,9 @@
             transition: all 0.2s;
             color: var(--text-main);
             font-weight: 500;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-
-        .btn:active {
-            background: #f5f5f7;
-            transform: scale(0.95);
-            border-color: var(--accent);
-        }
+        .btn-back { color: #ff3b30; border-color: #ff3b30; }
+        .btn:active { background: #f5f5f7; transform: scale(0.95); border-color: var(--accent); }
 
         .input-wrapper {
             position: fixed;
@@ -118,28 +164,8 @@
             align-items: center;
         }
 
-        #user-input {
-            flex: 1;
-            padding: 12px 18px;
-            border-radius: 25px;
-            border: 1px solid #d2d2d7;
-            font-size: 16px;
-            background: #f5f5f7;
-        }
-
-        #send-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: var(--user-msg);
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        #user-input { flex: 1; padding: 12px 18px; border-radius: 25px; border: 1px solid #d2d2d7; font-size: 16px; background: #f5f5f7; }
+        #send-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--user-msg); color: white; font-size: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -147,7 +173,16 @@
 <header>
     <h1>Bash Beer</h1>
     <p>● Online</p>
+    <button class="info-btn" onclick="toggleModal(true)">ⓘ</button>
 </header>
+
+<div class="modal-overlay" id="modalOverlay" onclick="toggleModal(false)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <h3>Информация</h3>
+        <p>Разработано: <a href="https://t.me/sahatmuradov" target="_blank">@sahatmuradov</a></p>
+        <button class="close-modal" onclick="toggleModal(false)">Понятно</button>
+    </div>
+</div>
 
 <div id="chat-container"></div>
 
@@ -162,22 +197,32 @@
         alcohol: {
             sub: ["Вино", "Пиво", "Водка", "Джин", "Виски", "Коньяк", "Текила", "Ром"],
             items: {
-                "Пиво": ["Разливное Бавария", "Разливное Классика", "Балтика 9"],
-                "Водка": ["Absolut", "Русский Стандарт"],
-                "Вино": ["Chardonnay", "Merlot"]
+                "Пиво": ["Разливное Бавария", "Разливное Классика", "Балтика 9", "Heineken", "Corona Extra"],
+                "Водка": ["Absolut", "Русский Стандарт", "Beluga", "Finlandia"],
+                "Вино": ["Chardonnay", "Merlot", "Pinot Grigio", "Cabernet Sauvignon"],
+                "Джин": ["Bombay Sapphire", "Beefeater", "Hendrick's"],
+                "Виски": ["Jameson", "Jack Daniels", "Chivas Regal 12"],
+                "Коньяк": ["Hennessy VS", "Remy Martin", "Старый Кенигсберг"],
+                "Текила": ["Olmeca Silver", "Sierra", "Patron"],
+                "Ром": ["Bacardi Carta Blanca", "Captain Morgan", "Dead Man's Fingers"]
             }
         },
-        snacks: ["Сыр косичка", "Сухарики", "Рыба сушёная", "Рыба копчёная", "Чипсы", "Бастурма"],
-        tableware: ["Стаканчики", "Бокалы для пива", "Бокалы для вина"]
+        snacks: ["Сыр косичка", "Сухарики", "Рыба сушёная", "Рыба копчёная", "Чипсы", "Бастурма", "Фисташки"],
+        tableware: ["Стаканчики (10шт)", "Бокалы для пива", "Бокалы для вина", "Рюмки (набор)"]
     };
 
     let state = 'START'; 
     let cart = [];
-    let lastItem = ''; // Переменная для хранения временно выбранного товара
+    let lastItem = ''; 
 
     const chatContainer = document.getElementById('chat-container');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
+    const modalOverlay = document.getElementById('modalOverlay');
+
+    function toggleModal(show) {
+        modalOverlay.style.display = show ? 'flex' : 'none';
+    }
 
     function addMessage(text, type = 'bot', options = []) {
         const msgDiv = document.createElement('div');
@@ -190,7 +235,7 @@
             optDiv.className = 'options-container';
             options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = 'btn';
+                btn.className = opt.includes("Назад") ? 'btn btn-back' : 'btn';
                 btn.innerText = opt;
                 btn.onclick = () => {
                     handleInput(opt);
@@ -213,21 +258,29 @@
     function logic(input) {
         const text = input.toLowerCase();
 
-        if (state === 'START') {
-            addMessage("Добро пожаловать в Bash Beer. Я ваш персональный ассистент. Что вы желаете заказать сегодня?", 'bot', MENU.categories);
+        if (text.includes("назад")) {
+            if (state === 'CHOOSE_SUBALCO' || state === 'ASK_QUANTITY' || state === 'CONFIRM_ADD') {
+                state = 'START';
+                logic('');
+                return;
+            }
+        }
+
+        if (state === 'START' || text === 'назад') {
+            addMessage("Добро пожаловать в Bash Beer! Выберите категорию для заказа:", 'bot', MENU.categories);
             state = 'CHOOSE_CATEGORY';
             return;
         }
 
         if (state === 'CHOOSE_CATEGORY') {
             if (text.includes('алкоголь') || text.includes('1')) {
-                addMessage("Отличный выбор. Какой напиток предпочитаете?", 'bot', MENU.alcohol.sub);
+                addMessage("Какой напиток предпочитаете?", 'bot', [...MENU.alcohol.sub, "⬅️ Назад"]);
                 state = 'CHOOSE_SUBALCO';
             } else if (text.includes('закуски') || text.includes('2')) {
-                addMessage("К пиву у нас всегда свежее. Что добавить?", 'bot', MENU.snacks);
+                addMessage("Что добавить из закусок?", 'bot', [...MENU.snacks, "⬅️ Назад"]);
                 state = 'ASK_QUANTITY';
             } else if (text.includes('посуда') || text.includes('3')) {
-                addMessage("Какая посуда вам нужна?", 'bot', MENU.tableware);
+                addMessage("Какая посуда вам нужна?", 'bot', [...MENU.tableware, "⬅️ Назад"]);
                 state = 'ASK_QUANTITY';
             }
             return;
@@ -237,16 +290,15 @@
             const sub = MENU.alcohol.sub.find(s => text.includes(s.toLowerCase()));
             if (sub) {
                 const items = MENU.alcohol.items[sub] || ["Товар временно отсутствует"];
-                addMessage(`У нас есть отличный выбор (${sub}):`, 'bot', items);
+                addMessage(`Выбор в категории ${sub}:`, 'bot', [...items, "⬅️ Назад"]);
                 state = 'ASK_QUANTITY';
             }
             return;
         }
 
-        // НОВЫЙ ЭТАП: Запрос количества
         if (state === 'ASK_QUANTITY') {
-            lastItem = input; // Запоминаем название товара
-            addMessage(`Укажите количество для "${lastItem}":`, 'bot', ["1", "2", "3", "5", "10"]);
+            lastItem = input;
+            addMessage(`Укажите количество для "${lastItem}":`, 'bot', ["1", "2", "3", "5", "10", "⬅️ Назад"]);
             state = 'CONFIRM_ADD';
             return;
         }
@@ -254,19 +306,18 @@
         if (state === 'CONFIRM_ADD') {
             const qty = parseInt(text) || 1;
             cart.push({ name: lastItem, count: qty });
-            addMessage(`✅ Добавлено: ${lastItem} — ${qty} шт. Желаете что-то еще?`, 'bot', ["Добавить еще", "Оформить заказ"]);
+            addMessage(`✅ Добавлено: ${lastItem} (${qty} шт). Желаете что-то еще?`, 'bot', ["Добавить еще", "Оформить заказ"]);
             state = 'NEXT_STEP';
             return;
         }
 
         if (state === 'NEXT_STEP') {
             if (text.includes('еще')) {
-                addMessage("Конечно. Что выберем?", 'bot', MENU.categories);
-                state = 'CHOOSE_CATEGORY';
+                state = 'START';
+                logic('');
             } else {
-                // Выводим состав корзины перед финалом
                 let summary = cart.map(i => `• ${i.name} (${i.count} шт.)`).join('\n');
-                addMessage(`Ваш заказ:\n${summary}\n\nПожалуйста, укажите номер телефона:`, 'bot');
+                addMessage(`Ваш заказ:\n${summary}\n\nУкажите ваш номер телефона:`, 'bot');
                 state = 'GET_PHONE';
             }
             return;
@@ -279,8 +330,9 @@
         }
 
         if (state === 'GET_ADDRESS') {
-            addMessage("Ваш заказ принят. С вами свяжется оператор для подтверждения. Благодарим за выбор Bash Beer!", 'bot');
+            addMessage("Ваш заказ принят! С вами свяжется оператор для подтверждения. Благодарим за выбор Bash Beer!", 'bot');
             state = 'FINISH';
+            cart = [];
             return;
         }
     }
@@ -288,7 +340,7 @@
     sendBtn.addEventListener('click', () => handleInput(userInput.value));
     userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleInput(userInput.value); });
 
-    window.onload = () => { setTimeout(() => logic(''), 300); };
+    window.onload = () => { logic('START'); };
 </script>
 </body>
 </html>
