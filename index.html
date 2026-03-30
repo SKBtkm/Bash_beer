@@ -3,202 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Megateh | Digital Production</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
+    <title>Magnitel - Панель управления</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #0071e3;
-            --dark: #000000;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--dark);
-            color: white;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        .container { max-width: 1400px; margin: 0 auto; padding: 80px 20px; }
-
-        /* --- ФИШКА 1: ТЕКСТ-МАСКА (ВИДЕО ВНУТРИ БУКВ) --- */
-        .hero-title {
-            font-size: clamp(40px, 10vw, 120px);
-            font-weight: 900;
-            text-align: center;
-            background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJpbmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxX1L8m9Y4/giphy.gif');
-            background-size: cover;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 40px;
-        }
-
-        .bento {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
-        }
-
-        .block {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 40px;
-            backdrop-filter: blur(20px);
-            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .block:hover { border-color: var(--primary); transform: translateY(-10px); }
-
-        /* --- ФИШКА 2: IPHONE СИМУЛЯТОР --- */
-        .iphone-box {
-            grid-column: span 3; grid-row: span 2;
-            display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, #111, #222);
-        }
-
-        .iphone {
-            width: 250px; height: 500px;
-            border: 8px solid #333; border-radius: 40px;
-            position: relative; overflow: hidden;
-            background: #000; box-shadow: 0 50px 100px rgba(0,0,0,0.5);
-        }
-
-        .iphone-screen {
-            width: 100%; height: 100%;
-            display: flex; transition: 0.5s;
-        }
-
-        .screen-item {
-            min-width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px; text-align: center; padding: 20px;
-        }
-
-        /* --- ФИШКА 3: КАЛЬКУЛЯТОР СТОИМОСТИ --- */
-        .calc-box { grid-column: span 3; }
-        .calc-row { display: flex; justify-content: space-between; margin: 15px 0; }
-        .price-display { font-size: 48px; font-weight: 900; color: var(--primary); text-align: center; margin-top: 20px; }
-
-        /* --- КНОПКИ --- */
-        .btn-toggle {
-            padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border);
-            background: none; color: white; cursor: pointer; transition: 0.3s;
-        }
-        .btn-toggle.active { background: var(--primary); border-color: var(--primary); }
-
-        .contact-btn {
-            position: fixed; bottom: 40px; right: 40px;
-            background: var(--primary); width: 80px; height: 80px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; box-shadow: 0 10px 40px rgba(0,113,227,0.5);
-            z-index: 1000; animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-        @media (max-width: 1000px) {
-            .bento { grid-template-columns: 1fr; }
-            .iphone-box, .calc-box { grid-column: span 1; }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f5f7; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
     </style>
 </head>
-<body>
+<body class="flex">
 
-<div class="container">
-    <div class="hero-title">MEGATEH</div>
-    
-    <div class="bento">
-        
-        <div class="block iphone-box">
-            <div style="margin-right: 40px;">
-                <h3>Наши Приложения</h3>
-                <p style="color: #888;">Нажмите кнопки, чтобы переключить проекты в симуляторе.</p>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-                    <button class="btn-toggle active" onclick="movePhone(0)">Страхование</button>
-                    <button class="btn-toggle" onclick="movePhone(1)">Магазин Техники</button>
-                    <button class="btn-toggle" onclick="movePhone(2)">CRM Система</button>
-                </div>
+    <aside class="w-64 h-screen sticky top-0 bg-white border-r border-gray-100 p-6 flex flex-col">
+        <div class="text-2xl font-bold text-blue-900 mb-10">Magnitel</div>
+        <nav class="space-y-4 flex-1">
+            <a href="index.html" class="flex items-center space-x-3 text-blue-600 font-medium p-2 bg-blue-50 rounded-xl">
+                <span>🏠</span> <span>Главная</span>
+            </a>
+            <a href="catalog.html" class="flex items-center space-x-3 text-gray-500 hover:text-blue-600 p-2 transition">
+                <span>📦</span> <span>Каталог</span>
+            </a>
+            <a href="cart.html" class="flex items-center space-x-3 text-gray-500 hover:text-blue-600 p-2 transition">
+                <span>🛒</span> <span>Корзина</span>
+            </a>
+        </nav>
+        <div class="text-xs text-gray-400 border-t pt-4">© 2026 MAGNITEL</div>
+    </aside>
+
+    <main class="flex-1 p-8">
+        <header class="flex justify-between items-center mb-10">
+            <div class="relative w-1/2">
+                <input type="text" placeholder="Поиск по артикулу..." class="w-full p-3 pl-10 rounded-2xl border-none ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
             </div>
-            <div class="iphone">
-                <div class="iphone-screen" id="phoneScreen">
-                    <div class="screen-item" style="background: #0071e3;">📱 <br><br><b>Insurance App</b><br>Оформление полиса за 2 минуты</div>
-                    <div class="screen-item" style="background: #ff3b30;">🛒 <br><br><b>Megateh Store</b><br>Покупки в рассрочку онлайн</div>
-                    <div class="screen-item" style="background: #34c759;">📊 <br><br><b>CRM Expert</b><br>Учет клиентов и аналитика</div>
-                </div>
+            <div class="flex items-center space-x-4">
+                <button class="p-2 bg-white rounded-full shadow-sm">🔔</button>
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600">CK</div>
+            </div>
+        </header>
+
+        <h1 class="text-4xl font-semibold mb-2">Здравствуйте</h1>
+        <p class="text-gray-500 mb-8">У вас <span class="text-blue-600 font-medium">4 активных отгрузки</span> на сегодня.</p>
+
+        <div class="grid grid-cols-4 gap-6 mb-10">
+            <div class="bg-blue-600 p-6 rounded-[24px] text-white card-hover cursor-pointer">
+                <div class="text-2xl mb-4">📑</div>
+                <div class="font-semibold text-lg">Мои заказы</div>
+                <div class="text-blue-100 text-sm mt-2">Отслеживание статусов</div>
+            </div>
+            <div class="bg-white p-6 rounded-[24px] border border-gray-100 card-hover cursor-pointer">
+                <div class="text-2xl mb-4 text-blue-600">📦</div>
+                <div class="font-semibold text-lg text-gray-800">Корзина</div>
+                <div class="text-gray-400 text-sm mt-2">Завершить заказ</div>
+            </div>
+            <div class="bg-white p-6 rounded-[24px] border border-gray-100 card-hover cursor-pointer">
+                <div class="text-2xl mb-4 text-green-500">✨</div>
+                <div class="font-semibold text-lg text-gray-800">Новинки</div>
+                <div class="text-gray-400 text-sm mt-2">Поступления недели</div>
+            </div>
+            <div class="bg-white p-6 rounded-[24px] border border-gray-100 card-hover cursor-pointer">
+                <div class="text-2xl mb-4 text-red-500">％</div>
+                <div class="font-semibold text-lg text-gray-800">Скидки</div>
+                <div class="text-gray-400 text-sm mt-2">Лучшие предложения</div>
             </div>
         </div>
 
-        <div class="block calc-box">
-            <h3>Узнать стоимость разработки</h3>
-            <div class="calc-row">
-                <span>Landing Page</span>
-                <input type="checkbox" class="task" data-price="300" onchange="updatePrice()">
+        <div class="relative overflow-hidden rounded-[32px] bg-black h-80 flex items-center p-12 text-white mb-10">
+            <div class="z-10 max-w-md">
+                <div class="uppercase tracking-widest text-sm mb-4 text-gray-400">Портативная акустика</div>
+                <h2 class="text-4xl font-bold mb-6">КАЧЕСТВЕННЫЙ ЗВУК, ВСЕГДА И ВЕЗДЕ</h2>
+                <button class="bg-white text-black px-8 py-3 rounded-full font-medium hover:bg-gray-200 transition">Подробнее</button>
             </div>
-            <div class="calc-row">
-                <span>Мобильное приложение</span>
-                <input type="checkbox" class="task" data-price="800" onchange="updatePrice()">
-            </div>
-            <div class="calc-row">
-                <span>Интеграция с 1С / Excel</span>
-                <input type="checkbox" class="task" data-price="400" onchange="updatePrice()">
-            </div>
-            <div class="calc-row">
-                <span>Дизайн в стиле Apple</span>
-                <input type="checkbox" class="task" data-price="200" onchange="updatePrice()">
-            </div>
-            <div class="price-display">$<span id="totalPrice">0</span></div>
-            <p style="text-align: center; color: #555; font-size: 12px; margin-top: 10px;">*Ориентировочная стоимость</p>
+            <img src="https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=800&q=80" class="absolute right-0 top-0 h-full w-1/2 object-cover opacity-80" alt="Speaker">
         </div>
-
-        <div class="block" style="grid-column: span 3;">
-            <h3>Стек 2026 года</h3>
-            <div style="display: flex; gap: 20px; font-size: 40px; margin-top: 20px;">
-                <span>⚛️</span><span>🚀</span><span>📦</span><span>🎨</span>
-            </div>
-            <p style="margin-top: 20px; color: #888;">Используем Next.js 16 и деплоим через Vercel для максимальной скорости в Туркменистане и мире.</p>
-        </div>
-
-    </div>
-</div>
-
-<a href="https://wa.me/99365413976" class="contact-btn">
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M12 0c-6.627 0-12 5.373-12 12 0 2.114.547 4.098 1.51 5.836l-1.51 5.164 5.316-1.488c1.674.877 3.58 1.488 5.684 1.488 6.628 0 12-5.373 12-12s-5.372-12-12-12zm6.373 16.194c-.233.656-1.155 1.189-1.589 1.258-.435.069-.87.138-2.61-.552-1.74-.69-2.842-2.432-2.93-2.552-.087-.121-.739-.983-.739-1.966 0-.983.522-1.466.717-1.673.195-.207.435-.259.587-.259.152 0 .304 0 .435.017.142.011.336-.053.525.397.195.466.674 1.638.739 1.776.065.138.109.311.022.483-.087.172-.13.276-.261.431-.13.155-.282.345-.402.466-.13.131-.261.276-.109.535.152.259.674 1.104 1.446 1.793.995.888 1.834 1.164 2.106 1.302.272.138.435.112.598-.078.163-.19.696-.81 0-1.13.125.125 1.17 1.05 1.435 1.189z"/></svg>
-</a>
-
-<script>
-    // Управление айфоном
-    function movePhone(index) {
-        document.getElementById('phoneScreen').style.transform = `translateX(-${index * 100}%)`;
-        const btns = document.querySelectorAll('.btn-toggle');
-        btns.forEach((b, i) => b.classList.toggle('active', i === index));
-    }
-
-    // Калькулятор цены
-    function updatePrice() {
-        let total = 0;
-        document.querySelectorAll('.task:checked').forEach(item => {
-            total += parseInt(item.getAttribute('data-price'));
-        });
-        
-        // Анимация цифр
-        let display = document.getElementById('totalPrice');
-        let current = parseInt(display.innerText);
-        let step = total > current ? 10 : -10;
-        
-        if (total !== current) {
-            let counter = setInterval(() => {
-                current += step;
-                display.innerText = current;
-                if (current === total) clearInterval(counter);
-            }, 10);
-        }
-    }
-</script>
+    </main>
 
 </body>
 </html>
