@@ -3,155 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Наше Портфолио | Разработка Сайтов и Приложений</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>DevCore | Высшая Лига Разработки</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f5f5f7;
-            --card-bg: #ffffff;
-            --text-color: #1d1d1f;
-            --accent-color: #0071e3;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #00f2fe;
+            --accent-2: #4facfe;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; } /* Скрываем дефолтный курсор */
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.5;
-            padding: 40px 20px;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; }
+        /* 1. Мощный анимированный фон (Morphing Background) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(125deg, #000000, #1a1a1a, #001f3f, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: -2;
+        }
 
-        /* Шапка */
-        header { text-align: center; margin-bottom: 60px; }
-        header h1 { font-size: 48px; font-weight: 600; letter-spacing: -1px; }
-        header p { font-size: 21px; color: #86868b; margin-top: 10px; }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        /* Сетка Bento Grid */
+        /* 2. «Магический курсор» (Follower) */
+        #cursor-follower {
+            position: fixed;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(0,242,254,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; position: relative; }
+
+        header { text-align: center; margin-bottom: 80px; }
+        
+        /* 3. Анимированный градиентный заголовок */
+        header h1 {
+            font-size: 64px; font-weight: 800; letter-spacing: -3px;
+            background: linear-gradient(to right, #ffffff 30%, var(--accent-color), var(--accent-2), #ffffff 70%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 5s linear infinite;
+        }
+
+        @keyframes shineText {
+            to { background-position: 200% center; }
+        }
+
+        header p { font-size: 20px; color: #86868b; margin-top: 15px; font-weight: 300; }
+
+        /* 4. Bento Grid с Glassmorphism */
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: auto;
-            gap: 20px;
+            gap: 25px;
+            perspective: 1000px; /* Для 3D-Tilt эффекта */
         }
 
+        /* Стиль стеклянной карточки */
         .card {
-            background: var(--card-bg);
-            border-radius: 24px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px); /* Размытие фона */
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            transition: transform 0.1s ease, box-shadow 0.3s ease; /* Быстрый Tilt */
+            transform-style: preserve-3d; /* Важно для 3D */
+            position: relative; overflow: hidden;
         }
 
-        .card:hover { transform: scale(1.02); }
+        .card:hover {
+            box-shadow: 0 10px 50px rgba(0,242,254,0.1);
+        }
 
-        /* Разные размеры плиток */
-        .large { grid-column: span 2; grid-row: span 2; min-height: 400px; }
+        /* Блик при наведении (CSS Light) */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 80%);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .card:hover::after { opacity: 1; }
+
+        .large { grid-column: span 2; grid-row: span 2; min-height: 450px; }
         .medium { grid-column: span 2; }
         .small { grid-column: span 1; }
 
-        h3 { font-size: 24px; margin-bottom: 10px; }
-        p.desc { color: #86868b; font-size: 16px; }
+        h3 { font-size: 28px; font-weight: 600; margin-bottom: 10px; transform: translateZ(20px); } /* Приподнимаем текст в 3D */
+        p.desc { color: #a1a1a6; font-size: 16px; font-weight: 300; transform: translateZ(15px); }
 
-        /* Кнопка связи */
+        /* 5. Анимированная неоновая кнопка связи */
         .cta-btn {
             display: inline-block;
-            background: var(--accent-color);
-            color: white;
-            padding: 12px 24px;
+            background: transparent;
+            color: var(--accent-color);
+            padding: 15px 30px;
             border-radius: 980px;
             text-decoration: none;
-            font-weight: 600;
-            margin-top: 20px;
-            text-align: center;
+            font-weight: 600; font-size: 18px;
+            border: 2px solid var(--accent-color);
+            margin-top: 20px; text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0,242,254,0.3);
+            animation: pulseNeon 2s infinite;
+            transform: translateZ(25px);
         }
 
-        /* Индикатор статуса */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            font-size: 14px;
-            color: #1d1d1f;
-            background: #e8e8ed;
-            padding: 5px 12px;
-            border-radius: 20px;
-            width: fit-content;
-            margin-bottom: 15px;
+        .cta-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0,242,254,0.6);
         }
-        .dot { height: 8px; width: 8px; background-color: #34c759; border-radius: 50%; margin-right: 8px; }
 
-        /* Имитация кода */
+        @keyframes pulseNeon {
+            0% { box-shadow: 0 0 15px rgba(0,242,254,0.3); }
+            50% { box-shadow: 0 0 25px rgba(0,242,254,0.5); }
+            100% { box-shadow: 0 0 15px rgba(0,242,254,0.3); }
+        }
+
+        /* Имитация CSS 3D Глобуса */
+        .globe-wrapper {
+            position: absolute; right: -50px; bottom: -50px;
+            width: 200px; height: 200px; opacity: 0.2;
+            transform: translateZ(10px);
+        }
+        .globe {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: repeating-linear-gradient(10deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 2px, transparent 2px, transparent 10px);
+            animation: rotateGlobe 10s linear infinite;
+        }
+        @keyframes rotateGlobe { to { transform: rotate(360deg); } }
+
+        /* Tech Stack Tags */
+        .tech-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; transform: translateZ(15px); }
+        .tag { background: rgba(0,242,254,0.1); color: var(--accent-color); padding: 5px 12px; border-radius: 20px; font-size: 12px; border: 1px solid rgba(0,242,254,0.2); }
+
+        /* Имитация "Чистого кода" */
         .code-box {
-            background: #1d1d1f;
-            color: #f5f5f7;
-            padding: 15px;
-            border-radius: 12px;
-            font-family: monospace;
-            font-size: 12px;
-            margin-top: 15px;
-            overflow: hidden;
+            background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; font-family: monospace; font-size: 11px;
+            margin-top: 15px; border: 1px solid var(--glass-border); color: #4facfe; transform: translateZ(10px);
         }
 
-        @media (max-width: 768px) {
+        /* Реальный курсор (маленькая точка) */
+        #cursor-dot {
+            position: fixed; width: 8px; height: 8px; background-color: var(--accent-color);
+            border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
+            z-index: 1000; transition: transform 0.1s ease;
+        }
+
+        @media (max-width: 900px) {
             .bento-grid { grid-template-columns: 1fr; }
-            .large, .medium, .small { grid-column: span 1; }
+            .large, .medium, .small { grid-column: span 1; min-height: auto; }
+            header h1 { font-size: 40px; }
+            * { cursor: auto; } #cursor-follower, #cursor-dot { display: none; } /* Отключаем курсор на мобильных */
         }
     </style>
 </head>
 <body>
 
+<div id="cursor-follower"></div>
+<div id="cursor-dot"></div>
+
 <div class="container">
     <header>
-        <div class="status-badge"><span class="dot"></span> Доступны для проектов</div>
-        <h1>Мы создаем будущее.</h1>
-        <p>Сайты и приложения с перфекционизмом в каждой строчке кода.</p>
+        <h1>Будущее цифровой среды.</h1>
+        <p>Код, который восхищает. Дизайн, который продает.</p>
     </header>
 
     <div class="bento-grid">
-        <div class="card large" style="background: linear-gradient(145deg, #ffffff, #f0f0f0);">
+        
+        <div class="card large" data-tilt>
             <div>
-                <h3>Проектирование UI/UX</h3>
-                <p class="desc">Мы создаем интерфейсы в стиле Apple — чистые, интуитивные и быстрые.</p>
+                <h3>UI/UX Премиум Уровня</h3>
+                <p class="desc">Мы не используем шаблоны. Каждый пиксель спроектирован для создания вау-эффекта и максимальной конверсии.</p>
             </div>
-            <div style="background: #eee; height: 200px; border-radius: 15px; margin-top: 20px; display:flex; align-items:center; justify-content:center; color:#ccc;">
-                [Здесь будет скриншот вашего приложения]
+            <div style="position:absolute; bottom:-50px; left:-50px; width:200px; height:200px; background:radial-gradient(circle, rgba(79,172,254,0.2) 0%, rgba(0,0,0,0) 70%); border-radius:50%;"></div>
+        </div>
+
+        <div class="card medium" data-tilt>
+            <h3>Передовые Технологии</h3>
+            <p class="desc">Только быстрый и масштабируемый стек для Vercel и облачных решений.</p>
+            <div class="tech-tags">
+                <span class="tag">React</span><span class="tag">Next.js</span><span class="tag">TypeScript</span>
+                <span class="tag">Python</span><span class="tag">GitHub Actions</span><span class="tag">AI Integration</span>
             </div>
         </div>
 
-        <div class="card medium">
-            <h3>Наш Стек</h3>
-            <p class="desc">Используем современные инструменты для деплоя и разработки.</p>
-            <div style="margin-top: 10px; font-weight: bold;">GitHub • Vercel • HTML5 • Figma</div>
+        <div class="card medium" data-tilt>
+            <h3>Готовы к доминированию?</h3>
+            <p class="desc">Напишите нам в WhatsApp, чтобы обсудить ваш следующий топовый продукт.</p>
+            <a href="https://wa.me/99365413976" class="cta-btn">Обсудить проект →</a>
         </div>
 
-        <div class="card small">
-            <h3>Чистый код</h3>
+        <div class="card small" data-tilt>
+            <h3>Perfection</h3>
             <div class="code-box">
-                &lt;div class="perfection"&gt;<br>
-                &nbsp;&nbsp;speed: 100%;<br>
-                &nbsp;&nbsp;quality: max;<br>
-                &lt;/div&gt;
+                class DevCore {<br>
+                &nbsp;&nbsp;performance = 1.0;<br>
+                &nbsp;&nbsp;ux = 'apple_grade';<br>
+                }
             </div>
         </div>
 
-        <div class="card small">
-            <h3>Связь</h3>
-            <p class="desc">Обсудим ваш проект сегодня.</p>
-            <a href="https://wa.me/99365413976" class="cta-btn">Написать нам</a>
+        <div class="card small" data-tilt style="overflow:hidden;">
+            <h3>Global</h3>
+            <p class="desc">Деплоим по всему миру.</p>
+            <div class="globe-wrapper">
+                <div class="globe"></div>
+            </div>
         </div>
 
-        <div class="card medium" style="background: #1d1d1f; color: white;">
-            <h3 style="color: white;">Производительность 100/100</h3>
-            <p style="color: #86868b;">Ваш сайт будет загружаться мгновенно благодаря оптимизации Vercel.</p>
-        </div>
     </div>
 </div>
+
+<script>
+    // 1. Логика Магического Курсора
+    const follower = document.getElementById('cursor-follower');
+    const dot = document.getElementById('cursor-dot');
+
+    document.addEventListener('mousemove', (e) => {
+        // Мягкое свечение (с задержкой)
+        follower.style.left = e.clientX + 'px';
+        follower.style.top = e.clientY + 'px';
+        
+        // Точка (мгновенно)
+        dot.style.left = e.clientX + 'px';
+        dot.style.top = e.clientY + 'px';
+    });
+
+    // Изменение курсора при наведении на кликабельные элементы
+    const links = document.querySelectorAll('a, .card');
+    links.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            follower.style.width = '150px'; follower.style.height = '150px';
+            dot.style.transform = 'translate(-50%, -50%) scale(2)';
+        });
+        link.addEventListener('mouseleave', () => {
+            follower.style.width = '300px'; follower.style.height = '300px';
+            dot.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+    });
+
+    // 2. Логика 3D-Tilt эффекта (Наклон карточек)
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const cardRect = card.getBoundingClientRect();
+            const cardWidth = cardRect.width;
+            const cardHeight = cardRect.height;
+            
+            // Координаты курсора относительно центра карточки
+            const centerX = cardRect.left + cardWidth / 2;
+            const centerY = cardRect.top + cardHeight / 2;
+            const mouseX = e.clientX - centerX;
+            const mouseY = e.clientY - centerY;
+            
+            // Рассчитываем угол наклона (макс 10 градусов)
+            const rotateX = (-1 * (mouseY / (cardHeight / 2)) * 10).toFixed(2);
+            const rotateY = ((mouseX / (cardWidth / 2)) * 10).toFixed(2);
+            
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        });
+        
+        // Сброс наклона при уходе мыши
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(0px)`;
+        });
+    });
+</script>
 
 </body>
 </html>
