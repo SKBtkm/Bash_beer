@@ -3,204 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Megateh Dev | Лаборатория Решений</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+    <title>Megateh | Digital Production</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0b0d;
-            --card: rgba(255, 255, 255, 0.04);
-            --accent: #0071e3;
-            --text: #ffffff;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #0071e3;
+            --dark: #000000;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
         }
-
-        /* Темы оформления */
-        body.light-theme { --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --glass-border: rgba(0,0,0,0.1); }
-        body.neon-theme { --bg: #000; --accent: #00ff41; --card: rgba(0, 255, 65, 0.05); }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            transition: background 0.5s ease;
+            font-family: 'Outfit', sans-serif;
+            background: var(--dark);
+            color: white;
             overflow-x: hidden;
-            padding-bottom: 100px;
+            scroll-behavior: smooth;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 80px 20px; }
 
-        header { text-align: center; margin-bottom: 60px; }
-        header h1 { font-size: clamp(32px, 5vw, 64px); font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; }
+        /* --- ФИШКА 1: ТЕКСТ-МАСКА (ВИДЕО ВНУТРИ БУКВ) --- */
+        .hero-title {
+            font-size: clamp(40px, 10vw, 120px);
+            font-weight: 900;
+            text-align: center;
+            background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJpbmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6bmZ6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxX1L8m9Y4/giphy.gif');
+            background-size: cover;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+        }
 
-        .bento-grid {
+        .bento {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(6, 1fr);
             gap: 20px;
         }
 
-        .card {
-            background: var(--card);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-            transition: 0.3s;
+        .block {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .large { grid-column: span 2; grid-row: span 2; }
-        .wide { grid-column: span 2; }
+        .block:hover { border-color: var(--primary); transform: translateY(-10px); }
 
-        h3 { margin-bottom: 15px; font-size: 22px; }
-
-        /* --- ФУНКЦИЯ 1: ЖИВОЙ КОНСТРУКТОР ТЕМ --- */
-        .theme-switcher {
-            display: flex; gap: 10px; margin-top: 20px;
-        }
-        .theme-btn {
-            padding: 10px 20px; border-radius: 12px; border: 1px solid var(--glass-border);
-            cursor: pointer; background: rgba(255,255,255,0.1); color: var(--text); font-size: 14px;
+        /* --- ФИШКА 2: IPHONE СИМУЛЯТОР --- */
+        .iphone-box {
+            grid-column: span 3; grid-row: span 2;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #111, #222);
         }
 
-        /* --- ФУНКЦИЯ 2: СЛАЙДЕР ДО/ПОСЛЕ --- */
-        .comparison {
-            position: relative; width: 100%; height: 200px; border-radius: 15px; overflow: hidden;
-            background: #333; margin-top: 20px;
-        }
-        .after-img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, #0071e3, #00f2fe); display: flex; align-items: center; justify-content: center; font-weight: 800;
-        }
-        .before-img {
-            position: absolute; top: 0; left: 0; width: 50%; height: 100%;
-            background: #555; z-index: 2; border-right: 3px solid white;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
-        .comparison-range {
-            position: absolute; bottom: 0; left: 0; width: 100%; z-index: 10; cursor: ew-resize;
+        .iphone {
+            width: 250px; height: 500px;
+            border: 8px solid #333; border-radius: 40px;
+            position: relative; overflow: hidden;
+            background: #000; box-shadow: 0 50px 100px rgba(0,0,0,0.5);
         }
 
-        /* --- ФУНКЦИЯ 3: ТЕСТ СКОРОСТИ --- */
-        .speed-meter {
-            text-align: center; padding: 20px;
+        .iphone-screen {
+            width: 100%; height: 100%;
+            display: flex; transition: 0.5s;
         }
-        .circle-progress {
-            width: 120px; height: 120px; border-radius: 50%;
-            border: 8px solid rgba(255,255,255,0.1);
-            border-top: 8px solid var(--accent);
-            margin: 0 auto; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 800; animation: spin 2s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Кнопка связи */
-        .contact-bar {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: white; padding: 15px 40px;
-            border-radius: 100px; text-decoration: none; font-weight: 700;
-            box-shadow: 0 10px 30px rgba(0,113,227,0.4); z-index: 100;
-            transition: 0.3s;
+        .screen-item {
+            min-width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; text-align: center; padding: 20px;
         }
-        .contact-bar:hover { transform: translateX(-50%) scale(1.05); }
 
-        @media (max-width: 800px) {
-            .bento-grid { grid-template-columns: 1fr; }
-            .large, .wide { grid-column: span 1; }
+        /* --- ФИШКА 3: КАЛЬКУЛЯТОР СТОИМОСТИ --- */
+        .calc-box { grid-column: span 3; }
+        .calc-row { display: flex; justify-content: space-between; margin: 15px 0; }
+        .price-display { font-size: 48px; font-weight: 900; color: var(--primary); text-align: center; margin-top: 20px; }
+
+        /* --- КНОПКИ --- */
+        .btn-toggle {
+            padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border);
+            background: none; color: white; cursor: pointer; transition: 0.3s;
+        }
+        .btn-toggle.active { background: var(--primary); border-color: var(--primary); }
+
+        .contact-btn {
+            position: fixed; bottom: 40px; right: 40px;
+            background: var(--primary); width: 80px; height: 80px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; box-shadow: 0 10px 40px rgba(0,113,227,0.5);
+            z-index: 1000; animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        @media (max-width: 1000px) {
+            .bento { grid-template-columns: 1fr; }
+            .iphone-box, .calc-box { grid-column: span 1; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>Почувствуйте мощь технологий.</h1>
-        <p>Интерактивное демо наших возможностей</p>
-    </header>
-
-    <div class="bento-grid">
+    <div class="hero-title">MEGATEH</div>
+    
+    <div class="bento">
         
-        <div class="card large">
-            <h3>01. Адаптивный Дизайн</h3>
-            <p>Клиент может сам выбрать атмосферу своего будущего сайта. Попробуйте сменить тему оформления:</p>
-            <div class="theme-switcher">
-                <div class="theme-btn" onclick="setTheme('dark')">Deep Black</div>
-                <div class="theme-btn" onclick="setTheme('light')">Apple White</div>
-                <div class="theme-btn" onclick="setTheme('neon')">Matrix Green</div>
+        <div class="block iphone-box">
+            <div style="margin-right: 40px;">
+                <h3>Наши Приложения</h3>
+                <p style="color: #888;">Нажмите кнопки, чтобы переключить проекты в симуляторе.</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+                    <button class="btn-toggle active" onclick="movePhone(0)">Страхование</button>
+                    <button class="btn-toggle" onclick="movePhone(1)">Магазин Техники</button>
+                    <button class="btn-toggle" onclick="movePhone(2)">CRM Система</button>
+                </div>
             </div>
-            <div style="margin-top:40px; border:1px dashed var(--glass-border); padding:20px; border-radius:20px; text-align:center;">
-                [ Визуализация интерфейса ]
-            </div>
-        </div>
-
-        <div class="card wide">
-            <h3>02. Трансформация бизнеса</h3>
-            <p>Потяните ползунок, чтобы увидеть разницу между обычным сайтом и нашим решением.</p>
-            <div class="comparison">
-                <div class="after-img">ВАШ НОВЫЙ САЙТ</div>
-                <div class="before-img" id="beforeBox">СТАРЫЙ САЙТ</div>
-                <input type="range" min="0" max="100" value="50" class="comparison-range" oninput="compare(this.value)">
+            <div class="iphone">
+                <div class="iphone-screen" id="phoneScreen">
+                    <div class="screen-item" style="background: #0071e3;">📱 <br><br><b>Insurance App</b><br>Оформление полиса за 2 минуты</div>
+                    <div class="screen-item" style="background: #ff3b30;">🛒 <br><br><b>Megateh Store</b><br>Покупки в рассрочку онлайн</div>
+                    <div class="screen-item" style="background: #34c759;">📊 <br><br><b>CRM Expert</b><br>Учет клиентов и аналитика</div>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <h3>03. Скорость</h3>
-            <div class="speed-meter">
-                <div class="circle-progress" id="meter">0</div>
-                <p style="margin-top:15px; font-weight:bold;">Google PageSpeed</p>
+        <div class="block calc-box">
+            <h3>Узнать стоимость разработки</h3>
+            <div class="calc-row">
+                <span>Landing Page</span>
+                <input type="checkbox" class="task" data-price="300" onchange="updatePrice()">
             </div>
-            <button class="theme-btn" style="width:100%; margin-top:10px;" onclick="runTest()">Запустить тест</button>
+            <div class="calc-row">
+                <span>Мобильное приложение</span>
+                <input type="checkbox" class="task" data-price="800" onchange="updatePrice()">
+            </div>
+            <div class="calc-row">
+                <span>Интеграция с 1С / Excel</span>
+                <input type="checkbox" class="task" data-price="400" onchange="updatePrice()">
+            </div>
+            <div class="calc-row">
+                <span>Дизайн в стиле Apple</span>
+                <input type="checkbox" class="task" data-price="200" onchange="updatePrice()">
+            </div>
+            <div class="price-display">$<span id="totalPrice">0</span></div>
+            <p style="text-align: center; color: #555; font-size: 12px; margin-top: 10px;">*Ориентировочная стоимость</p>
         </div>
 
-        <div class="card">
-            <h3>04. Чистый Код</h3>
-            <p style="font-size:12px; font-family:monospace; color:var(--accent);">
-                function buildSuccess() { <br>
-                &nbsp;&nbsp;return "Profitable App"; <br>
-                }
-            </p>
-            <p class="desc" style="margin-top:20px; font-size:14px;">Никакого мусора. Только чистый HTML/JS для молниеносной работы.</p>
-        </div>
-
-        <div class="card wide">
-            <h3>05. Готовы начать?</h3>
-            <p>Мы разрабатываем сложные системы: от магазинов до страховых сервисов. Ваш проект будет работать так же гладко, как это портфолио.</p>
-            <div style="margin-top:20px; opacity: 0.5;">WhatsApp: +993 65 413976</div>
+        <div class="block" style="grid-column: span 3;">
+            <h3>Стек 2026 года</h3>
+            <div style="display: flex; gap: 20px; font-size: 40px; margin-top: 20px;">
+                <span>⚛️</span><span>🚀</span><span>📦</span><span>🎨</span>
+            </div>
+            <p style="margin-top: 20px; color: #888;">Используем Next.js 16 и деплоим через Vercel для максимальной скорости в Туркменистане и мире.</p>
         </div>
 
     </div>
 </div>
 
-<a href="https://wa.me/99365413976" class="contact-bar">ОБСУДИТЬ МОЙ ПРОЕКТ</a>
+<a href="https://wa.me/99365413976" class="contact-btn">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M12 0c-6.627 0-12 5.373-12 12 0 2.114.547 4.098 1.51 5.836l-1.51 5.164 5.316-1.488c1.674.877 3.58 1.488 5.684 1.488 6.628 0 12-5.373 12-12s-5.372-12-12-12zm6.373 16.194c-.233.656-1.155 1.189-1.589 1.258-.435.069-.87.138-2.61-.552-1.74-.69-2.842-2.432-2.93-2.552-.087-.121-.739-.983-.739-1.966 0-.983.522-1.466.717-1.673.195-.207.435-.259.587-.259.152 0 .304 0 .435.017.142.011.336-.053.525.397.195.466.674 1.638.739 1.776.065.138.109.311.022.483-.087.172-.13.276-.261.431-.13.155-.282.345-.402.466-.13.131-.261.276-.109.535.152.259.674 1.104 1.446 1.793.995.888 1.834 1.164 2.106 1.302.272.138.435.112.598-.078.163-.19.696-.81 0-1.13.125.125 1.17 1.05 1.435 1.189z"/></svg>
+</a>
 
 <script>
-    // Логика переключения тем
-    function setTheme(theme) {
-        document.body.className = '';
-        if (theme !== 'dark') {
-            document.body.classList.add(theme + '-theme');
+    // Управление айфоном
+    function movePhone(index) {
+        document.getElementById('phoneScreen').style.transform = `translateX(-${index * 100}%)`;
+        const btns = document.querySelectorAll('.btn-toggle');
+        btns.forEach((b, i) => b.classList.toggle('active', i === index));
+    }
+
+    // Калькулятор цены
+    function updatePrice() {
+        let total = 0;
+        document.querySelectorAll('.task:checked').forEach(item => {
+            total += parseInt(item.getAttribute('data-price'));
+        });
+        
+        // Анимация цифр
+        let display = document.getElementById('totalPrice');
+        let current = parseInt(display.innerText);
+        let step = total > current ? 10 : -10;
+        
+        if (total !== current) {
+            let counter = setInterval(() => {
+                current += step;
+                display.innerText = current;
+                if (current === total) clearInterval(counter);
+            }, 10);
         }
-    }
-
-    // Логика слайдера До/После
-    function compare(val) {
-        document.getElementById('beforeBox').style.width = val + "%";
-    }
-
-    // Логика теста скорости
-    function runTest() {
-        let count = 0;
-        const meter = document.getElementById('meter');
-        const interval = setInterval(() => {
-            count++;
-            meter.innerText = count;
-            if (count === 100) {
-                clearInterval(interval);
-                alert("Ваш сайт будет летать так же!");
-            }
-        }, 20);
     }
 </script>
 
